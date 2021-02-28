@@ -1,0 +1,22 @@
+<h1>Users</h1>
+
+<nz-table #basicTable [nzData]="listData">
+    <thead>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Favourite Movie</th>
+        <th>Likes Popcorn</th>
+        <th>Gender</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let data of listData">
+        <td>{{data.first_name}}</td>
+        <td>{{data.last_name}}</td>
+        <td>{{data.favourite_movie}}</td>
+        <td>{{data.likes_popcorn}}</td>
+        <td>{{data.gender}}</td>
+      </tr>
+    </tbody>
+  </nz-table>
