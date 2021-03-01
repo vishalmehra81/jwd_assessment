@@ -1,36 +1,43 @@
 <h1>Add Emplyoees Details</h1>
 <div *ngIf="isListHide == false">
-<nz-table #basicTable [nzData]="listData">
+<nz-table #filterTable  [nzData]="listData" nzPaginationType="small" nzSize='small' nzPageSize="10" [nzPageSizeOptions]="[5, 10]"
+[nzTemplateMode]="false" nzShowSizeChanger nzTableLayout="fixed" 
+(nzCurrentPageDataChange)="onCurrentPageDataChange($event)">
     <thead>
       <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Favourite Movie</th>
-        <th>Likes Popcorn</th>
-        <th>Gender</th>
-        <th>Action</th>
-        
+        <th 
+        *ngFor="let column of listOfColumns"
+            [nzSortOrder]="column.sortOrder"
+            [nzSortFn]="column.sortFn"
+            [nzSortDirections]="column.sortDirections"
+            [nzFilterMultiple]="column.filterMultiple"
+            [nzFilters]="column.listOfFilter"
+            [nzFilterFn]="column.filterFn"
+        >
+          {{ column.name }}
+        </th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of listData">
+      <tr *ngFor="let data of filterTable.data">
         <td>{{data.first_name}}</td>
         <td>{{data.last_name}}</td>
         <td>{{data.favourite_movie}}</td>
         <td *ngIf='data.likes_popcorn'>Yes</td>
         <td *ngIf='!data.likes_popcorn'>No</td>
         <td>{{data.gender}}</td>
-      <td>
-        <a>{{data.name}}</a>
-        <nz-divider nzType="vertical"></nz-divider>
-        <a (click)="onDelete(data.id)">Delete</a>
-      </td>
+        <td>
+          <a>{{data.name}}</a>
+          <nz-divider nzType="vertical"></nz-divider>
+          <a (click)="onDelete(data.id)">Delete</a>
+        </td>
     </tr>
     </tbody>
 
   </nz-table>
-  <br>
-  <button nz-button nzType="primary" (click)="addEmployee()">Add Employee</button>
+  <div class="add-employee-button">
+    <button nz-button nzType="primary" (click)="addEmployee()">Add Employee</button>
+  </div>
 </div>
 
 <!-- <form nz-form *ngIf="isListHide == true"> 
@@ -71,55 +78,59 @@
   <button (Submit)="addEmpDetails()">Submit Details</button>
 
 </form> -->
-<form *ngIf="isListHide == true" nz-form [nzLayout]="'inline'" nz-form [formGroup]="messageForm" (ngSubmit)="onSubmit()" class="form-display">
-    <nz-form-item>
-      <nz-form-control nzErrorTip="Please input your First Name!">
-          <nz-input-group>
-            <input formControlName="firstName" nz-input placeholder="First Name" />
-          </nz-input-group>
-        </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-control nzErrorTip="Please input your Last Name!">
-        <nz-input-group >
-          <input formControlName="lastName" nz-input placeholder="Last Name" />
-        </nz-input-group>
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-control nzErrorTip="Please input your Answer!">
-        <nz-input-group >
-          <input formControlName="favMovie" nz-input placeholder="Favourite Movie" />
-        </nz-input-group>
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-control nzErrorTip="Please input your Answer!">
-        <!-- <nz-input-group>
-          <input formControlName="likes" nz-input placeholder="Likes Popcorn" />
-        </nz-input-group> -->
-        <nz-radio-group formControlName="likes">
-          <label nz-radio nzValue=true>Yes</label>
-          <label nz-radio nzValue=false>No</label>
-        </nz-radio-group>
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-control nzErrorTip="Please input your Gender!">
-        <!-- <nz-input-group>
-          <input formControlName="gender" nz-input placeholder="Gender" />
-        </nz-input-group> -->
-        <nz-select formControlName="gender" class="form-select">
-          <nz-option nzValue="Male" nzLabel="Male"></nz-option>
-          <nz-option nzValue="Female" nzLabel="Female"></nz-option>
-        </nz-select>
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-control>
-        <button nz-button nzType="primary" name="Submit" type="submit" id="submit" >Submit</button>
-      </nz-form-control>
-    </nz-form-item>
+<form nz-form *ngIf="isListHide == true" [nzLayout]="'inline'" 
+ [formGroup]="validateForm" (ngSubmit)="onSubmit()" class="form-display .ant-form">
+   
+  <nz-form-item class="ant-form-item ant-row ant-colant-form-item-has-error">
+    <nz-form-label [nzSm]="25" [nzXs]="24" nzFor="firstName" nzRequired nzTooltipTitle="Enter you First Name"
+    class="ant-form-item-label">First Name</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input your First name!">
+      <input nz-input id="firstName" formControlName="firstName" 
+      class="ant-input ng-untouched ng-invalid ng-dirty"/>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="ant-form-item ant-row ant-col ant-form-item-has-error">
+    <nz-form-label [nzSm]="25" [nzXs]="24" nzFor="lastName" nzRequired nzTooltipTitle="Enter you Last Name"
+    class="ant-form-item-label">Last Name</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input your Last name!">
+      <input nz-input id="lastName" formControlName="lastName" 
+      class="ant-input ng-untouched ng-invalid ng-dirty"/>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="ant-form-item ant-row ant-col ant-form-item-has-error">
+    <nz-form-label [nzSm]="25" [nzXs]="24" nzFor="favMovie" nzRequired nzTooltipTitle="Enter your favourite movie"
+    class="ant-form-item-label">Favourite Movie</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please input your Favourite movie!">
+      <input nz-input id="favMovie" formControlName="favMovie" 
+      class="ant-input ng-untouched ng-invalid ng-dirty"/>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="ant-form-item ant-row ant-col ant-form-item-has-error">
+    <nz-form-label [nzSm]="25" [nzXs]="24" nzFor="favMovie" nzRequired nzTooltipTitle="Enter your choice"
+    class="ant-form-item-label">Likes Popcorn</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please select you choice">
+      <nz-radio-group formControlName="likes">
+        <label nz-radio nzValue=true>Yes</label>
+        <label nz-radio nzValue=false>No</label>
+      </nz-radio-group>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item class="ant-form-item ant-row ant-col">
+    <nz-form-label [nzSm]="25" [nzXs]="24" nzFor="gender" nzRequired nzTooltipTitle="Select how you identify youself"
+    class="ant-form-item-label">Gender</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Please select one option!">
+      <nz-select id="gender" formControlName="gender" class="ant-select">
+      <nz-option nzValue="Male" nzLabel="Male"></nz-option>
+      <nz-option nzValue="Female" nzLabel="Female"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+  <nz-form-item>
+    <nz-form-control>
+      <button nz-button nzType="primary" name="Submit" type="submit" id="submit" >Submit</button>
+      <button nz-button nzType="primary" name="Cancel" id="cancel" (click)="backToEmployee()" class="margin-left">Cancel</button>
+    </nz-form-control>
+  </nz-form-item> 
 </form>
 
 

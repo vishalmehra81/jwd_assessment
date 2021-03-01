@@ -24,6 +24,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
  import { NzSelectModule } from 'ng-zorro-antd/select';
  import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+ import { NzAlertModule } from 'ng-zorro-antd/alert';
 
 registerLocaleData(en);
 
@@ -48,7 +49,8 @@ registerLocaleData(en);
     ReactiveFormsModule,
     NzRadioModule,
     NzSelectModule,
-    NzPaginationModule
+    NzPaginationModule,
+    NzAlertModule
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]

@@ -1,18 +1,25 @@
 <h1>Users</h1>
 
-<nz-table #basicTable [nzData]="listData">
-
+<nz-table #dynamicTable [nzData]="listData" nzPaginationType="small" nzSize='small' nzPageSize="10" [nzPageSizeOptions]="[5, 10]"
+[nzTemplateMode]="false" nzShowSizeChanger nzTableLayout="fixed" (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
+>
     <thead>
       <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Favourite Movie</th>
-        <th>Likes Popcorn</th>
-        <th>Gender</th>
+        <th 
+          *ngFor="let column of listOfColumns"
+              [nzSortOrder]="column.sortOrder"
+              [nzSortFn]="column.sortFn"
+              [nzSortDirections]="column.sortDirections"
+              [nzFilterMultiple]="column.filterMultiple"
+              [nzFilters]="column.listOfFilter"
+              [nzFilterFn]="column.filterFn"
+          >
+            {{ column.name }}
+        </th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let data of listData">
+      <tr *ngFor="let data of dynamicTable.data">
         <td>{{data.first_name}}</td>
         <td>{{data.last_name}}</td>
         <td>{{data.favourite_movie}}</td>
