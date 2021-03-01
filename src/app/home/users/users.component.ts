@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import MockData from './../../../assets/mock_data_(5).json';
 import {User} from './../../../type/users';
 import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 
 
 @Component({

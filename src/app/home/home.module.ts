@@ -8,6 +8,15 @@ import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './../app-routing.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { NzTableModule } from 'ng-zorro-antd/table';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+ import { NzSelectModule } from 'ng-zorro-antd/select';
+ import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+
 
 
 @NgModule({
@@ -25,7 +34,16 @@ import { AppRoutingModule } from './../app-routing.module';
     NzLayoutModule,
     NzMenuModule,
     BrowserAnimationsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NzRadioModule,
+    NzSelectModule,
+    NzTableModule,
+    NzFormModule,
+    NzButtonModule,
+    HttpClientModule,
+    NzPaginationModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 

@@ -1,6 +1,7 @@
 <h1>Users</h1>
 
 <nz-table #basicTable [nzData]="listData">
+
     <thead>
       <tr>
         <th>First Name</th>
@@ -15,7 +16,8 @@
         <td>{{data.first_name}}</td>
         <td>{{data.last_name}}</td>
         <td>{{data.favourite_movie}}</td>
-        <td>{{data.likes_popcorn}}</td>
+        <td *ngIf='data.likes_popcorn'>Yes</td>
+        <td *ngIf='!data.likes_popcorn'>No</td>
         <td>{{data.gender}}</td>
       </tr>
     </tbody>
