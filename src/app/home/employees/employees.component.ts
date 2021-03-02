@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import MockData from './../../../assets/mock_data_(5).json';
 import {User} from './../../../type/users';
+import {Employee} from './../../../type/employee';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { FormsModule,FormBuilder,FormControl, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
@@ -8,6 +9,12 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzTableFilterFn, NzTableFilterList, NzTableSortFn, NzTableSortOrder } from 'ng-zorro-antd/table';
 import { NzFormTooltipIcon } from 'ng-zorro-antd/form';
+import * as queries from './../../../graphql/queries';
+import * as mutations from './../../../graphql/mutations';
+import * as subscriptions from './../../../graphql/subscriptions';
+import { API, graphqlOperation } from 'aws-amplify';
+import  { GetEmployeeQueryVariables, ListEmployeesQuery, ListEmployeesQueryVariables }  from './../../API.service';
+import {GraphQLResult} from '@aws-amplify/api-graphql';
 
 interface ColumnItem {
   name: string;
@@ -93,8 +100,8 @@ export class EmployeesComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) { }
 
-  ngOnInit(): void {
-    this.listData = MockData as User[];
+   async ngOnInit(): Promise<void> {
+    //this.listData = MockData as User[];
     this.validateForm = this.formBuilder.group({
       firstName: [null, [Validators.required]],
       lastName: [null, [Validators.required]],
@@ -102,11 +109,38 @@ export class EmployeesComponent implements OnInit {
       likes: [null,[Validators.required]],
       gender: [null,[Validators.required]]
     });
-    console.log(this.listData);
+    
+    await this.getEmployees().then(data => this.listData = data);
   }
 
-  onDelete(id){
-    this.listData = this.listData.filter(item => item.id !== id);
+  async getEmployees(){
+    let users: User[] = [];
+    const listQV: ListEmployeesQueryVariables = {};
+    const listGQL: GraphQLResult<ListEmployeesQuery> = 
+    await API.graphql(graphqlOperation(queries.listEmployees, listQV)) as GraphQLResult<ListEmployeesQuery>;
+    if (listGQL.data) {
+      const listQ: ListEmployeesQuery = listGQL.data;
+      if (listQ.listEmployees && listQ.listEmployees.items) {
+        listQ.listEmployees.items.forEach((item) => {
+          if (item) {
+            let employee = new User();
+            employee.id = item.id;
+            employee.first_name = item.first_name;
+            employee.last_name = item.last_name;
+            employee.gender = item.gender;
+            employee.favourite_movie = item.favourite_movie;
+            employee.likes_popcorn = item.likes_popcorn;
+            users.push(employee);
+          }
+        });
+      }
+    }
+    return users;
+  }
+
+  async onDelete(id){
+    await API.graphql(graphqlOperation(mutations.deleteEmployee, { input: { id: id }}));
+    await this.getEmployees().then(data => this.listData = data);
   }
 
   addEmployee(){
@@ -119,21 +153,22 @@ export class EmployeesComponent implements OnInit {
     this.validateForm.reset();
   }
 
-  onSubmit(){
+  async onSubmit(){
     for (const i in this.validateForm.controls) {
       this.validateForm.controls[i].markAsDirty();
       this.validateForm.controls[i].updateValueAndValidity();
     }
     if(this.validateForm.valid){
     let user = new User();
-    user.id = this.listData[this.listData.length - 1].id + 1;
-    user.first_name = this.validateForm.controls['firstName'].value ;
-    user.last_name = this.validateForm.controls['lastName'].value ;
-    user.favourite_movie = this.validateForm.controls['favMovie'].value ;
-    user.likes_popcorn = this.validateForm.controls['likes'].value ;
-    user.gender = this.validateForm.controls['gender'].value ;
-    this.listData.push(user);
+    let first_name = this.validateForm.controls['firstName'].value ;
+    let last_name = this.validateForm.controls['lastName'].value ;
+    let favourite_movie = this.validateForm.controls['favMovie'].value ;
+    let likes_popcorn = this.validateForm.controls['likes'].value ;
+    let gender = this.validateForm.controls['gender'].value ;
+    await API.graphql(graphqlOperation(mutations.createEmployee, {input: { first_name: first_name, last_name: last_name, favourite_movie:favourite_movie, likes_popcorn: likes_popcorn, gender: gender }}));
+    await this.getEmployees().then(data => this.listData = data);
     this.isListHide = false;
+    
     alert("Employee data added" + " : " + this.validateForm.controls['firstName'].value + " " + this.validateForm.controls['lastName'].value + " " + this.validateForm.controls['favMovie'].value + " " + this.validateForm.controls['likes'].value + " " + this.validateForm.controls['gender'].value  );
     this.validateForm.reset();
     }

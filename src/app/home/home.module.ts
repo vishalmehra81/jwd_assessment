@@ -17,6 +17,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
  import { NzSelectModule } from 'ng-zorro-antd/select';
  import { NzPaginationModule } from 'ng-zorro-antd/pagination';
  import { NzAlertModule } from 'ng-zorro-antd/alert';
+ import { AmplifyUIAngularModule } from '@aws-amplify/ui-angular';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
     NzButtonModule,
     HttpClientModule,
     NzPaginationModule,
-    NzAlertModule
+    NzAlertModule,
+    AmplifyUIAngularModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 

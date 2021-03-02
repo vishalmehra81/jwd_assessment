@@ -4,6 +4,10 @@ import {User} from './../../../type/users';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
 import { NzTableFilterFn, NzTableFilterList, NzTableSortFn, NzTableSortOrder } from 'ng-zorro-antd/table';
+import { API, graphqlOperation } from 'aws-amplify';
+import  { GetEmployeeQueryVariables, ListEmployeesQuery, ListEmployeesQueryVariables }  from './../../API.service';
+import {GraphQLResult} from '@aws-amplify/api-graphql';
+import * as queries from './../../../graphql/queries';
 
 interface ColumnItem {
   name: string;
@@ -77,9 +81,33 @@ export class UsersComponent implements OnInit {
     }
   ];
 
-  ngOnInit(): void {
-    this.listData = MockData as User[];
-    console.log(this.listData);
+  async ngOnInit(): Promise<void> {
+    await this.getEmployees().then(data => this.listData = data);
+  }
+
+  async getEmployees(){
+    let users: User[] = [];
+    const listQV: ListEmployeesQueryVariables = {};
+    const listGQL: GraphQLResult<ListEmployeesQuery> = 
+    await API.graphql(graphqlOperation(queries.listEmployees, listQV)) as GraphQLResult<ListEmployeesQuery>;
+    if (listGQL.data) {
+      const listQ: ListEmployeesQuery = listGQL.data;
+      if (listQ.listEmployees && listQ.listEmployees.items) {
+        listQ.listEmployees.items.forEach((item) => {
+          if (item) {
+            let employee = new User();
+            employee.id = item.id;
+            employee.first_name = item.first_name;
+            employee.last_name = item.last_name;
+            employee.gender = item.gender;
+            employee.favourite_movie = item.favourite_movie;
+            employee.likes_popcorn = item.likes_popcorn;
+            users.push(employee);
+          }
+        });
+      }
+    }
+    return users;
   }
 
   onCurrentPageDataChange($event: ReadonlyArray<User>): void {

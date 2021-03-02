@@ -25,6 +25,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
  import { NzSelectModule } from 'ng-zorro-antd/select';
  import { NzPaginationModule } from 'ng-zorro-antd/pagination';
  import { NzAlertModule } from 'ng-zorro-antd/alert';
+ import { AmplifyUIAngularModule } from '@aws-amplify/ui-angular';
 
 registerLocaleData(en);
 
@@ -50,7 +51,9 @@ registerLocaleData(en);
     NzRadioModule,
     NzSelectModule,
     NzPaginationModule,
-    NzAlertModule
+    NzAlertModule,
+    AmplifyUIAngularModule
+
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]

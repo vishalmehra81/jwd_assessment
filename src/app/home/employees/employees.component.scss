@@ -55,6 +55,7 @@
     white-space: nowrap;
     text-align: right;
     vertical-align: middle;
+    width:150px;
 }
 .ant-form-item-has-error{
     background-color: #fff;
@@ -90,12 +91,6 @@
     font-feature-settings: "tnum";
 }
 
-.ant-row {
-    flex-flow: row wrap;
-}
-.ant-row, .ant-row:after, .ant-row:before {
-    display: flex;
-}
 .ant-col {
     position: relative;
     max-width: 100%;
@@ -104,4 +99,8 @@
 
 .margin-left{
     margin-left: 20px;
+}
+
+.margin-left-buttons{
+    margin-left: 150px;
 }

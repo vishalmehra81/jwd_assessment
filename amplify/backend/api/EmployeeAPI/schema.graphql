@@ -1,0 +1,10 @@
+type Employee @model {
+  id: ID!
+  first_name: String!
+  last_name: String!
+  favourite_movie: String!
+  likes_popcorn: Boolean!
+  gender: String!
+}
+
+

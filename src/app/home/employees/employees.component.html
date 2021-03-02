@@ -40,44 +40,6 @@
   </div>
 </div>
 
-<!-- <form nz-form *ngIf="isListHide == true"> 
-  <nz-form-item>
-    <nz-form-label [nzSpan]="6" nzFor="firstName">First Name</nz-form-label>
-    <nz-form-control [nzSpan]="14">
-      <input nz-input name="firstName" type="firstName" id="firstName">
-    </nz-form-control>
-  </nz-form-item >
-<br>
-  <nz-form-item>
-    <nz-form-label [nzSpan]="6" nzFor="lastName">Last Name</nz-form-label>
-    <nz-form-control [nzSpan]="14">
-      <input nz-input name="lastName" type="lastName" id="lastName">
-    </nz-form-control>
-  </nz-form-item >
-  <br>
-  <nz-form-item>
-    <nz-form-label [nzSpan]="6" nzFor="favMovie">Favourite Movie</nz-form-label>
-    <nz-form-control [nzSpan]="14">
-        <input nz-input name="favMovie" type="favMovie" id="favMovie">
-    </nz-form-control>
-  </nz-form-item >
-  <br>
-  <nz-form-item>
-    <nz-form-label [nzSpan]="6" nzFor="likes">Likes Popcorn</nz-form-label>
-    <nz-form-control [nzSpan]="14">
-      <input nz-input name="likes" type="likes" id="likes">
-    </nz-form-control>
-  </nz-form-item >
-  <br>
-  <nz-form-item>
-    <nz-form-label [nzSpan]="6" nzFor="Gender">Gender</nz-form-label>
-    <nz-form-control [nzSpan]="14">
-      <input nz-input name="Gender" type="Gender" id="Gender">
-    </nz-form-control>
-  </nz-form-item >
-  <button (Submit)="addEmpDetails()">Submit Details</button>
-
-</form> -->
 <form nz-form *ngIf="isListHide == true" [nzLayout]="'inline'" 
  [formGroup]="validateForm" (ngSubmit)="onSubmit()" class="form-display .ant-form">
    
@@ -125,7 +87,7 @@
       </nz-select>
     </nz-form-control>
   </nz-form-item>
-  <nz-form-item>
+  <nz-form-item class="margin-left-buttons">
     <nz-form-control>
       <button nz-button nzType="primary" name="Submit" type="submit" id="submit" >Submit</button>
       <button nz-button nzType="primary" name="Cancel" id="cancel" (click)="backToEmployee()" class="margin-left">Cancel</button>
