@@ -43,13 +43,6 @@
   <h1 *ngIf='validateForm.controls.id.value !== null' class="heading">Edit Employee Details</h1>
   <form nz-form [nzLayout]="'inline'" 
   [formGroup]="validateForm" (ngSubmit)="onSubmit()" class="form-display .ant-form">
-    <!-- <nz-alert
-    nzBanner nzCloseable
-    nzType="success"
-    nzMessage="Success Tips"
-    nzDescription="Detailed description and advices about successful copywriting."
-    nzShowIcon
-    ></nz-alert> -->
     <nz-form-item class="ant-form-item ant-row ant-colant-form-item-has-error">
       <nz-form-label [nzSm]="25" [nzXs]="24" nzFor="firstName" nzRequired nzTooltipTitle="Enter you First Name"
       class="ant-form-item-label">First Name</nz-form-label>

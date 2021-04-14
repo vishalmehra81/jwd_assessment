@@ -9,28 +9,24 @@ import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './../app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
- import { NzSelectModule } from 'ng-zorro-antd/select';
- import { NzPaginationModule } from 'ng-zorro-antd/pagination';
- import { NzAlertModule } from 'ng-zorro-antd/alert';
- import { AmplifyUIAngularModule } from '@aws-amplify/ui-angular';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzPaginationModule } from 'ng-zorro-antd/pagination';
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import { AmplifyUIAngularModule } from '@aws-amplify/ui-angular';
+import { WelcomeComponent } from './welcome/welcome.component';
 
 
 @NgModule({
-  declarations: [UsersComponent, EmployeesComponent, HomeComponent],
+  declarations: [UsersComponent, EmployeesComponent, HomeComponent, WelcomeComponent],
   exports: [
     UsersComponent,
     EmployeesComponent,
     HomeComponent,
-    // NzLayoutModule,
-    // NzTableModule,
-    // NzMenuModule,
-    // BrowserAnimationsModule,
-    // IconsProviderModule
+    WelcomeComponent
   ],
   imports: [
     CommonModule,
@@ -46,7 +42,6 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
     NzTableModule,
     NzFormModule,
     NzButtonModule,
-    HttpClientModule,
     NzPaginationModule,
     NzAlertModule,
     AmplifyUIAngularModule
