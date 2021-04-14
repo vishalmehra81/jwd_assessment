@@ -1,8 +1,7 @@
 <h1>Users</h1>
 
 <nz-table #dynamicTable [nzData]="listData" nzPaginationType="small" nzSize='small' nzPageSize="10" [nzPageSizeOptions]="[5, 10]"
-[nzTemplateMode]="false" nzShowSizeChanger nzTableLayout="fixed" (nzCurrentPageDataChange)="onCurrentPageDataChange($event)"
->
+[nzTemplateMode]="false" nzShowSizeChanger nzTableLayout="fixed">
     <thead>
       <tr>
         <th 
@@ -28,4 +27,4 @@
         <td>{{data.gender}}</td>
       </tr>
     </tbody>
-  </nz-table>
+</nz-table>

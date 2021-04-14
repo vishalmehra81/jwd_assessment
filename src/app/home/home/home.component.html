@@ -1,5 +1,4 @@
-<h2>Home Page Here</h2>
-<!-- <nz-layout class="sider">
+<nz-layout class="app-layout">
   <nz-sider class="menu-sidebar"
             nzCollapsible
             nzWidth="256px"
@@ -7,7 +6,7 @@
             [(nzCollapsed)]="isCollapsed"
             [nzTrigger]="null">
     <div class="sidebar-logo">
-        <img src="assets/img/logo.png" alt="logo">
+        <a routerLink="/"><img src="assets/img/logo-nav@2x.png" alt="logo"></a>
     </div>
     <ul nz-menu nzTheme="dark" nzMode="inline" [nzInlineCollapsed]="isCollapsed">
       <li nz-submenu nzOpen nzTitle="Home" nzIcon="home">
@@ -31,6 +30,10 @@
                [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
             ></i>
         </span>
+        <div *ngIf="authState === 'signedin' && user"><h3>Hello, {{user.username}}</h3></div>
+        <div class="header-signout">
+          <amplify-sign-out></amplify-sign-out>
+        </div>
       </div>
     </nz-header>
     <nz-content>
@@ -39,4 +42,5 @@
       </div>
     </nz-content>
   </nz-layout>
-</nz-layout> -->
+</nz-layout>
+

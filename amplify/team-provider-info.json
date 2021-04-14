@@ -10,6 +10,11 @@
       "StackName": "amplify-jwdassessment-dev-202805",
       "StackId": "arn:aws:cloudformation:eu-west-1:340588216380:stack/amplify-jwdassessment-dev-202805/a3060590-7acc-11eb-9f2d-06ec87ed76f5",
       "AmplifyAppId": "d2vv3268fw79n8"
+    },
+    "categories": {
+      "auth": {
+        "jwdassessmentaa9c1609aa9c1609": {}
+      }
     }
   }
 }

@@ -32,7 +32,7 @@ registerLocaleData(en);
 @NgModule({
   declarations: [
     AppComponent,
-    AuthComponent,
+    AuthComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +53,6 @@ registerLocaleData(en);
     NzPaginationModule,
     NzAlertModule,
     AmplifyUIAngularModule
-
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]

@@ -15,16 +15,8 @@ import * as subscriptions from './../../../graphql/subscriptions';
 import { API, graphqlOperation } from 'aws-amplify';
 import  { GetEmployeeQueryVariables, ListEmployeesQuery, ListEmployeesQueryVariables }  from './../../API.service';
 import {GraphQLResult} from '@aws-amplify/api-graphql';
-
-interface ColumnItem {
-  name: string;
-  sortOrder: NzTableSortOrder | null;
-  sortFn: NzTableSortFn | null;
-  listOfFilter: NzTableFilterList;
-  filterFn: NzTableFilterFn | null;
-  filterMultiple: boolean;
-  sortDirections: NzTableSortOrder[];
-}
+import { NzAlertModule } from 'ng-zorro-antd/alert';
+import {Utils, ColumnItem} from './../utils';
 
 @Component({
   selector: 'app-employees',
@@ -35,74 +27,16 @@ export class EmployeesComponent implements OnInit {
   validateForm!: FormGroup;
   listData: User[] = [];
   isListHide: boolean = false;
+  listOfColumns: ColumnItem[];
+  
+  constructor(private formBuilder: FormBuilder) {
+      this.listOfColumns = Utils.listOfColumns;
+  }
 
-  listOfColumns: ColumnItem[] = [
-    {
-      name: 'First Name',
-      sortOrder: null,
-      sortFn: (a: User, b: User) => a.first_name.localeCompare(b.first_name),
-      sortDirections: ['ascend', 'descend', null],
-      filterMultiple: true,
-      listOfFilter: [
-        { text: 'Bastian', value: 'Bastian' },
-        { text: 'Raymond', value: 'Raymond' }
-        // { text: 'Raymond', value: 'Raymond', byDefault: true }
-      ],
-      filterFn: (list: string[], item: User) => list.some(name => item.first_name.indexOf(name) !== -1)
-    },
-    {
-      name: 'Last Name',
-      sortOrder: null,
-      sortFn: (a: User, b: User) => a.last_name.localeCompare(b.last_name),
-      sortDirections: ['ascend', 'descend', null],
-      listOfFilter: [],
-      filterFn: (list: string[], item: User) => list.some(name => item.last_name.indexOf(name) !== -1),
-      filterMultiple: true
-    },
-    {
-      name: 'Favourite Movie',
-      sortOrder: null,
-      sortFn: (a: User, b: User) => a.favourite_movie.localeCompare(b.favourite_movie),
-      sortDirections: ['ascend', 'descend', null],
-      listOfFilter: [],
-      filterFn: (list: string[], item: User) => list.some(name => item.favourite_movie.indexOf(name) !== -1),
-      filterMultiple: true
-    },
-    {
-      name: 'Likes Popcorn',
-      sortOrder: null,
-      sortDirections: ['ascend', 'descend', null],
-      sortFn: (a: User, b: User) => {return Number(a.likes_popcorn) - Number(b.likes_popcorn)} ,
-      filterMultiple: true,
-      listOfFilter: [],
-      filterFn: null
-    },
-    {
-      name: 'Gender',
-      sortOrder: null,
-      sortDirections: ['ascend', 'descend', null],
-      sortFn: (a: User, b: User) =>  a.gender.localeCompare(b.gender),
-      filterMultiple: true,
-      listOfFilter: [],
-      filterFn: (list: string[], item: User) => list.some(name => item.gender.indexOf(name) !== -1)
-    },
-    {
-      name: 'Action',
-      sortOrder: null,
-      sortDirections: ['ascend', 'descend', null],
-      sortFn: null,
-      filterMultiple: false,
-      listOfFilter: [],
-      filterFn: null
-    }
-    
-  ];
-
-  constructor(private formBuilder: FormBuilder) { }
-
-   async ngOnInit(): Promise<void> {
+  async ngOnInit(): Promise<void> {
     //this.listData = MockData as User[];
     this.validateForm = this.formBuilder.group({
+      id: [null],
       firstName: [null, [Validators.required]],
       lastName: [null, [Validators.required]],
       favMovie: [null,[Validators.required]],
@@ -110,7 +44,10 @@ export class EmployeesComponent implements OnInit {
       gender: [null,[Validators.required]]
     });
     
-    await this.getEmployees().then(data => this.listData = data);
+    await this.getEmployees().then(data => {
+      this.listData = data;
+      Utils.updateColumnInfomation(data);
+    });
   }
 
   async getEmployees(){
@@ -137,10 +74,31 @@ export class EmployeesComponent implements OnInit {
     }
     return users;
   }
-
+  
   async onDelete(id){
     await API.graphql(graphqlOperation(mutations.deleteEmployee, { input: { id: id }}));
     await this.getEmployees().then(data => this.listData = data);
+  }
+
+  onUpdate(id){
+    let user = this.listData.filter(item => item.id === id)?.[0];
+    if(user){
+      this.validateForm.setValue({
+        id: user.id,
+        firstName: user.first_name,
+        lastName: user.last_name,
+        favMovie: user.favourite_movie,
+        likes: user.likes_popcorn.toString(),
+        gender: user.gender
+     });
+    }
+    this.isListHide = true;
+  }
+
+  onRowSelect(event, id){
+    if(event.target.id === "action")
+      return;
+    this.onUpdate(id);
   }
 
   addEmployee(){
@@ -159,21 +117,21 @@ export class EmployeesComponent implements OnInit {
       this.validateForm.controls[i].updateValueAndValidity();
     }
     if(this.validateForm.valid){
-    let user = new User();
-    let first_name = this.validateForm.controls['firstName'].value ;
-    let last_name = this.validateForm.controls['lastName'].value ;
-    let favourite_movie = this.validateForm.controls['favMovie'].value ;
-    let likes_popcorn = this.validateForm.controls['likes'].value ;
-    let gender = this.validateForm.controls['gender'].value ;
-    await API.graphql(graphqlOperation(mutations.createEmployee, {input: { first_name: first_name, last_name: last_name, favourite_movie:favourite_movie, likes_popcorn: likes_popcorn, gender: gender }}));
-    await this.getEmployees().then(data => this.listData = data);
-    this.isListHide = false;
-    
-    alert("Employee data added" + " : " + this.validateForm.controls['firstName'].value + " " + this.validateForm.controls['lastName'].value + " " + this.validateForm.controls['favMovie'].value + " " + this.validateForm.controls['likes'].value + " " + this.validateForm.controls['gender'].value  );
-    this.validateForm.reset();
+      let id = this.validateForm.controls['id'].value;
+      let first_name = this.validateForm.controls['firstName'].value ;
+      let last_name = this.validateForm.controls['lastName'].value ;
+      let favourite_movie = this.validateForm.controls['favMovie'].value ;
+      let likes_popcorn = this.validateForm.controls['likes'].value ;
+      let gender = this.validateForm.controls['gender'].value ;
+      if(id){
+        await API.graphql(graphqlOperation(mutations.updateEmployee, {input: { id: id, first_name: first_name, last_name: last_name, favourite_movie: favourite_movie, likes_popcorn: likes_popcorn, gender: gender }}));
+      }else{
+        await API.graphql(graphqlOperation(mutations.createEmployee, {input: { first_name: first_name, last_name: last_name, favourite_movie: favourite_movie, likes_popcorn: likes_popcorn, gender: gender }}));
+      }
+      await this.getEmployees().then(data => this.listData = data);
+      this.isListHide = false;
+      //alert("Employee data added" + " : " + this.validateForm.controls['firstName'].value + " " + this.validateForm.controls['lastName'].value + " " + this.validateForm.controls['favMovie'].value + " " + this.validateForm.controls['likes'].value + " " + this.validateForm.controls['gender'].value  );
+      this.validateForm.reset();
     }
-  }
-
-  onCurrentPageDataChange($event: ReadonlyArray<User>): void {
   }
 }

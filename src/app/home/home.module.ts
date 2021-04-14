@@ -25,9 +25,12 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
   exports: [
     UsersComponent,
     EmployeesComponent,
-    HomeComponent
-    
-
+    HomeComponent,
+    // NzLayoutModule,
+    // NzTableModule,
+    // NzMenuModule,
+    // BrowserAnimationsModule,
+    // IconsProviderModule
   ],
   imports: [
     CommonModule,
@@ -49,6 +52,5 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
     AmplifyUIAngularModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
-
 })
 export class HomeModule { }

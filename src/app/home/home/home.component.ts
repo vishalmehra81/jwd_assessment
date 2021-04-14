@@ -1,9 +1,10 @@
-import { Component, OnInit,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { IconsProviderModule } from './../../icons-provider.module';
 import { NzLayoutModule } from 'ng-zorro-antd/layout';
 import { NzMenuModule } from 'ng-zorro-antd/menu';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
+import { onAuthUIStateChange, CognitoUserInterface, AuthState } from '@aws-amplify/ui-components';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -12,8 +13,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 })
 export class HomeComponent implements OnInit {
   isCollapsed = false;
-  constructor() { }
-
+  user: CognitoUserInterface | undefined;
+  authState: AuthState;
+  
 
   imports: [
     IconsProviderModule,
@@ -23,7 +25,23 @@ export class HomeComponent implements OnInit {
 
   ]
 
+  constructor(private ref: ChangeDetectorRef, private router: Router) { }
+
   ngOnInit(): void {
+    onAuthUIStateChange((authState, authData) => {
+      this.authState = authState;
+      this.user = authData as CognitoUserInterface;
+      if(this.user){
+        this.router.navigate(['']);
+      }else{
+        this.router.navigate(['login']);
+      }
+      this.ref.detectChanges();
+    })
+  }
+
+  ngOnDestroy() {
+    return onAuthUIStateChange;
   }
 
 }
